@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emergency Information - Medical Advisor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <i class="fas fa-heartbeat"></i>
+      <span>Medical Advisor</span>
+    </div>
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Home</a>
+      <a href="{{ url_for('emergency_info') }}" class="active"><i class="fas fa-ambulance"></i> Emergency</a>
+    </div>
+  </nav>
+
+  <div class="container emergency-container">
+    <header class="emergency-header">
+      <h1><i class="fas fa-ambulance"></i> Emergency Information</h1>
+      <p class="lead">Know when to seek immediate medical attention</p>
+    </header>
+
+    <div class="emergency-call">
+      <i class="fas fa-phone-alt"></i>
+      <div>
+        <h2>Emergency Services</h2>
+        <p class="emergency-number">Call 911 (US) or your local emergency number</p>
+        <p>India: 112 | UK: 999 | EU: 112 | Australia: 000</p>
+      </div>
+    </div>
+
+    <section class="emergency-section">
+      <h2><i class="fas fa-exclamation-triangle"></i> Call Emergency Services Immediately If:</h2>
+      <div class="emergency-grid">
+        <div class="emergency-card critical">
+          <i class="fas fa-heart-broken"></i>
+          <h3>Heart Attack Signs</h3>
+          <ul>
+            <li>Chest pain or pressure</li>
+            <li>Pain radiating to arm, jaw, or back</li>
+            <li>Shortness of breath</li>
+            <li>Cold sweats, nausea</li>
+          </ul>
+        </div>
+
+        <div class="emergency-card critical">
+          <i class="fas fa-brain"></i>
+          <h3>Stroke Signs (FAST)</h3>
+          <ul>
+            <li><strong>F</strong>ace drooping</li>
+            <li><strong>A</strong>rm weakness</li>
+            <li><strong>S</strong>peech difficulty</li>
+            <li><strong>T</strong>ime to call emergency</li>
+          </ul>
+        </div>
+
+        <div class="emergency-card critical">
+          <i class="fas fa-lungs"></i>
+          <h3>Breathing Emergency</h3>
+          <ul>
+            <li>Severe difficulty breathing</li>
+            <li>Choking</li>
+            <li>Blue lips or face</li>
+            <li>Drowning</li>
+          </ul>
+        </div>
+
+        <div class="emergency-card critical">
+          <i class="fas fa-tint"></i>
+          <h3>Severe Bleeding</h3>
+          <ul>
+            <li>Uncontrollable bleeding</li>
+            <li>Deep wounds</li>
+            <li>Coughing or vomiting blood</li>
+            <li>Blood in stool (large amounts)</li>
+          </ul>
+        </div>
+
+        <div class="emergency-card warning">
+          <i class="fas fa-allergies"></i>
+          <h3>Severe Allergic Reaction</h3>
+          <ul>
+            <li>Swelling of face/throat</li>
+            <li>Difficulty breathing</li>
+            <li>Rapid heartbeat</li>
+            <li>Dizziness or fainting</li>
+          </ul>
+        </div>
+
+        <div class="emergency-card warning">
+          <i class="fas fa-user-injured"></i>
+          <h3>Trauma & Injuries</h3>
+          <ul>
+            <li>Severe burns</li>
+            <li>Head injuries with confusion</li>
+            <li>Suspected broken bones</li>
+            <li>Electric shock</li>
+          </ul>
+        </div>
+
+        <div class="emergency-card warning">
+          <i class="fas fa-skull-crossbones"></i>
+          <h3>Poisoning</h3>
+          <ul>
+            <li>Ingested toxic substances</li>
+            <li>Drug overdose</li>
+            <li>Carbon monoxide exposure</li>
+            <li>Call Poison Control</li>
+          </ul>
+        </div>
+
+        <div class="emergency-card warning">
+          <i class="fas fa-brain"></i>
+          <h3>Neurological</h3>
+          <ul>
+            <li>Seizures</li>
+            <li>Sudden severe headache</li>
+            <li>Loss of consciousness</li>
+            <li>Sudden confusion</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="first-aid-basics">
+      <h2><i class="fas fa-first-aid"></i> Basic First Aid Tips</h2>
+      
+      <div class="aid-accordion">
+        <details>
+          <summary><i class="fas fa-heart"></i> CPR Basics</summary>
+          <div class="aid-content">
+            <ol>
+              <li>Call emergency services first</li>
+              <li>Place heel of hand on center of chest</li>
+              <li>Push hard and fast (100-120 compressions/min)</li>
+              <li>Allow chest to fully recoil between compressions</li>
+              <li>If trained, give 2 rescue breaths every 30 compressions</li>
+            </ol>
+          </div>
+        </details>
+
+        <details>
+          <summary><i class="fas fa-hand-holding-medical"></i> Choking (Heimlich Maneuver)</summary>
+          <div class="aid-content">
+            <ol>
+              <li>Stand behind the person</li>
+              <li>Place fist above navel, thumb side in</li>
+              <li>Grasp fist with other hand</li>
+              <li>Give quick upward thrusts</li>
+              <li>Repeat until object is expelled</li>
+            </ol>
+          </div>
+        </details>
+
+        <details>
+          <summary><i class="fas fa-tint"></i> Bleeding Control</summary>
+          <div class="aid-content">
+            <ol>
+              <li>Apply direct pressure with clean cloth</li>
+              <li>Keep the wound elevated if possible</li>
+              <li>Don't remove cloth if soaked - add more</li>
+              <li>Apply tourniquet only for life-threatening limb bleeding</li>
+              <li>Seek medical attention</li>
+            </ol>
+          </div>
+        </details>
+
+        <details>
+          <summary><i class="fas fa-fire"></i> Burns</summary>
+          <div class="aid-content">
+            <ol>
+              <li>Cool the burn under cool running water for 10-20 minutes</li>
+              <li>Remove jewelry/tight items near burn</li>
+              <li>Cover loosely with sterile bandage</li>
+              <li>Don't apply ice, butter, or ointments</li>
+              <li>Seek medical care for severe burns</li>
+            </ol>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="important-numbers">
+      <h2><i class="fas fa-phone-square"></i> Important Numbers to Save</h2>
+      <div class="numbers-grid">
+        <div class="number-card">
+          <i class="fas fa-hospital"></i>
+          <span>Local Hospital</span>
+        </div>
+        <div class="number-card">
+          <i class="fas fa-user-md"></i>
+          <span>Primary Doctor</span>
+        </div>
+        <div class="number-card">
+          <i class="fas fa-skull-crossbones"></i>
+          <span>Poison Control</span>
+        </div>
+        <div class="number-card">
+          <i class="fas fa-users"></i>
+          <span>Emergency Contact</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="back-link">
+      <a href="{{ url_for('index') }}" class="btn btn-primary">
+        <i class="fas fa-arrow-left"></i> Back to Medical Advisor
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <p><i class="fas fa-heartbeat"></i> Medical Advisor &copy; 2024</p>
+      <p class="footer-disclaimer">Always call emergency services for life-threatening situations.</p>
+    </div>
+  </footer>
+</body>
+</html>

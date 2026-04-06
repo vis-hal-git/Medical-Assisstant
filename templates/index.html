@@ -3,32 +3,208 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Medical Advisor</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  <title>Medical Advisor - AI-Powered Health Assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <i class="fas fa-heartbeat"></i>
+      <span>Medical Advisor</span>
+    </div>
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}" class="active"><i class="fas fa-home"></i> Home</a>
+      <a href="{{ url_for('emergency_info') }}"><i class="fas fa-ambulance"></i> Emergency</a>
+    </div>
+  </nav>
+
   <div class="container">
     <header>
-      <h1>Your Trusted Medical Advisor</h1>
-      <p class="lead">Get accurate and reliable medical advice tailored to your concerns.</p>
+      <h1><i class="fas fa-stethoscope"></i> Your Trusted Medical Advisor</h1>
+      <p class="lead">Get accurate and reliable medical information powered by AI. Remember to always consult a healthcare professional for personalized advice.</p>
     </header>
 
-    <form method="post">
-      <label for="user_input">Enter Your Medical Query:</label>
-      <textarea id="user_input" name="user_input" rows="4" cols="50"></textarea><br /><br />
-      <input type="submit" value="Submit" />
+    {% if error %}
+    <div class="alert alert-error">
+      <i class="fas fa-exclamation-triangle"></i> {{ error }}
+    </div>
+    {% endif %}
+
+    <div class="disclaimer">
+      <i class="fas fa-info-circle"></i>
+      <strong>Disclaimer:</strong> This tool provides general health information only. It is not a substitute for professional medical advice, diagnosis, or treatment.
+    </div>
+
+    <form method="post" id="query-form">
+      <div class="form-group">
+        <label for="query_type"><i class="fas fa-tags"></i> Query Category:</label>
+        <select id="query_type" name="query_type" class="form-select">
+          <option value="general" {% if query_type == 'general' %}selected{% endif %}>General Health Query</option>
+          <option value="symptoms" {% if query_type == 'symptoms' %}selected{% endif %}>Symptom Analysis</option>
+          <option value="medication" {% if query_type == 'medication' %}selected{% endif %}>Medication Information</option>
+          <option value="condition" {% if query_type == 'condition' %}selected{% endif %}>Medical Condition</option>
+          <option value="prevention" {% if query_type == 'prevention' %}selected{% endif %}>Prevention & Wellness</option>
+          <option value="first_aid" {% if query_type == 'first_aid' %}selected{% endif %}>First Aid</option>
+          <option value="nutrition" {% if query_type == 'nutrition' %}selected{% endif %}>Nutrition Advice</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="user_input"><i class="fas fa-comment-medical"></i> Enter Your Medical Query:</label>
+        <textarea 
+          id="user_input" 
+          name="user_input" 
+          rows="4" 
+          placeholder="Describe your health concern, symptoms, or question..."
+          required
+        >{{ user_input if user_input else '' }}</textarea>
+      </div>
+
+      <div class="quick-prompts">
+        <span class="quick-label">Quick prompts:</span>
+        {% for key, value in categories.items() %}
+        <button type="button" class="quick-btn" data-prompt="{{ value }}" data-type="{{ key }}">
+          {{ key|capitalize }}
+        </button>
+        {% endfor %}
+      </div>
+
+      <div class="button-group">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-paper-plane"></i> Get Medical Advice
+        </button>
+        <button type="reset" class="btn btn-secondary">
+          <i class="fas fa-undo"></i> Clear
+        </button>
+      </div>
     </form>
 
-    {% if user_input %}
+    {% if response %}
     <section class="response">
-      <h2>Medical Response</h2>
-      <p>{{ response }}</p>
+      <div class="response-header">
+        <h2><i class="fas fa-notes-medical"></i> Medical Response</h2>
+        <div class="response-actions">
+          <button onclick="copyResponse()" class="btn-icon" title="Copy response">
+            <i class="fas fa-copy"></i>
+          </button>
+          <button onclick="printResponse()" class="btn-icon" title="Print response">
+            <i class="fas fa-print"></i>
+          </button>
+        </div>
+      </div>
+      <div class="response-content" id="response-content">
+        {{ response|safe }}
+      </div>
+      <div class="response-footer">
+        <p class="timestamp"><i class="fas fa-clock"></i> Generated on {{ now().strftime('%B %d, %Y at %I:%M %p') if now else 'just now' }}</p>
+      </div>
     </section>
     {% endif %}
 
-    <footer>
-      <center><p>&copy; 2023 Your Medical Advisor</p></center>
-    </footer>
+    {% if chat_history and chat_history|length > 0 %}
+    <section class="chat-history">
+      <div class="history-header">
+        <h3><i class="fas fa-history"></i> Recent Queries</h3>
+        <form method="post" action="{{ url_for('clear_history') }}" style="display: inline;">
+          <button type="submit" class="btn btn-small btn-danger">
+            <i class="fas fa-trash"></i> Clear History
+          </button>
+        </form>
+      </div>
+      <div class="history-list">
+        {% for msg in chat_history[-6:]|reverse %}
+        <div class="history-item {{ msg.role }}">
+          <span class="role-icon">
+            {% if msg.role == 'user' %}
+            <i class="fas fa-user"></i>
+            {% else %}
+            <i class="fas fa-robot"></i>
+            {% endif %}
+          </span>
+          <span class="history-content">{{ msg.content[:100] }}{% if msg.content|length > 100 %}...{% endif %}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    <section class="features">
+      <h3><i class="fas fa-star"></i> Features</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <i class="fas fa-brain"></i>
+          <h4>AI-Powered</h4>
+          <p>Advanced AI provides accurate medical information</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-shield-alt"></i>
+          <h4>Safe & Secure</h4>
+          <p>Your queries are processed securely</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-clock"></i>
+          <h4>24/7 Available</h4>
+          <p>Get health information anytime</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-language"></i>
+          <h4>Clear Language</h4>
+          <p>Easy-to-understand medical explanations</p>
+        </div>
+      </div>
+    </section>
   </div>
+
+  <footer>
+    <div class="footer-content">
+      <p><i class="fas fa-heartbeat"></i> Medical Advisor &copy; {{ now().year if now else '2024' }}</p>
+      <p class="footer-disclaimer">This is not a substitute for professional medical advice.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Quick prompt buttons
+    document.querySelectorAll('.quick-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.getElementById('user_input').value = this.dataset.prompt;
+        document.getElementById('query_type').value = this.dataset.type;
+        document.getElementById('user_input').focus();
+      });
+    });
+
+    // Copy response
+    function copyResponse() {
+      const content = document.getElementById('response-content').innerText;
+      navigator.clipboard.writeText(content).then(() => {
+        alert('Response copied to clipboard!');
+      });
+    }
+
+    // Print response
+    function printResponse() {
+      const content = document.getElementById('response-content').innerHTML;
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+        <html>
+        <head><title>Medical Response</title>
+        <style>body{font-family:Arial,sans-serif;padding:20px;line-height:1.6;}</style>
+        </head>
+        <body>${content}</body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    }
+
+    // Form validation
+    document.getElementById('query-form').addEventListener('submit', function(e) {
+      const input = document.getElementById('user_input').value.trim();
+      if (!input) {
+        e.preventDefault();
+        alert('Please enter a medical query.');
+      }
+    });
+  </script>
 </body>
 </html>
